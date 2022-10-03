@@ -22,7 +22,6 @@ public class HandleRequest {
             String firstLine = input.readLine();
             String[] parts = firstLine.split(" ");
             while (input.ready()) {
-//                System.out.println("hello.");
                 System.out.println(input.readLine());
             }
 

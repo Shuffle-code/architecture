@@ -30,7 +30,7 @@ public class HttpServer {
         }
     }
 
-    private static void handleRequest(Socket socket) {
+    static void handleRequest(Socket socket) {
         try (BufferedReader input = new BufferedReader(
                 new InputStreamReader(
                         socket.getInputStream(), StandardCharsets.UTF_8));
@@ -40,13 +40,13 @@ public class HttpServer {
 
             String firstLine = input.readLine();
             String[] parts = firstLine.split(" ");
-            System.out.println(firstLine);
+            System.out.println("1!!!!!!!!!!!!!! " + firstLine);
             while (input.ready()) {
-//                System.out.println("hello.");
-                System.out.println(input.readLine());
+                System.out.println("!"  + input.readLine());
             }
 
             Path path = Paths.get(WWW, parts[1]);
+            System.out.println(path);
             if (!Files.exists(path)) {
                 output.println("HTTP/1.1 404 NOT_FOUND");
                 output.println("Content-Type: text/html; charset=utf-8");
@@ -61,7 +61,6 @@ public class HttpServer {
             output.println();
 
             Files.newBufferedReader(path).transferTo(output);
-
             System.out.println("Client disconnected!");
         } catch (IOException e) {
             e.printStackTrace();
