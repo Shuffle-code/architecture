@@ -1,6 +1,6 @@
 package geekbrains;
 
-import ru.geekbrains.domain.HttpRequest;
+import geekbrains.domain.HttpRequest;
 
 import java.util.List;
 

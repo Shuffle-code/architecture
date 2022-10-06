@@ -1,9 +1,9 @@
 package geekbrains;
 
-import ru.geekbrains.domain.HttpResponse;
-import ru.geekbrains.domain.Status;
-import ru.geekbrains.logger.ConsoleLogger;
-import ru.geekbrains.logger.Logger;
+import geekbrains.domain.HttpResponse;
+import geekbrains.domain.Status;
+import geekbrains.logger.ConsoleLogger;
+import geekbrains.logger.Logger;
 
 import java.io.IOException;
 import java.io.StringReader;

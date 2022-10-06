@@ -1,7 +1,7 @@
 package geekbrains;
 
-import ru.geekbrains.logger.ConsoleLogger;
-import ru.geekbrains.logger.Logger;
+import geekbrains.logger.ConsoleLogger;
+import geekbrains.logger.Logger;
 
 import java.io.IOException;
 import java.net.ServerSocket;

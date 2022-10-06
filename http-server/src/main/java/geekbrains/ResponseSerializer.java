@@ -1,6 +1,6 @@
 package geekbrains;
 
-import ru.geekbrains.domain.HttpResponse;
+import geekbrains.domain.HttpResponse;
 
 public interface ResponseSerializer {
 
