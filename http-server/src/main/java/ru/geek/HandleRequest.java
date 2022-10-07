@@ -4,49 +4,28 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class HttpServer {
-
+public class HandleRequest {
     private static String WWW = "C:\\Users\\79130\\IdeaProjects\\architecture\\architecture\\www";
-
-    public static void main(String[] args) {
-        try (ServerSocket serverSocket = new ServerSocket(8080)) {
-            System.out.println("Server started!");
-
-            while (true) {
-                Socket socket = serverSocket.accept();
-                System.out.println("New client connected!");
-
-                new Thread(() -> handleRequest(socket)).start();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    static void handleRequest(Socket socket) {
-        try (BufferedReader input = new BufferedReader(
-                new InputStreamReader(
-                        socket.getInputStream(), StandardCharsets.UTF_8));
-             PrintWriter output = new PrintWriter(socket.getOutputStream())
+    private static Stream stream = new Stream();
+    public void handleRequest(Socket socket) {
+        try (BufferedReader input = stream.createInputStream(socket);
+             PrintWriter output = stream.createOutputStream(socket)
         ) {
-            while (!input.ready());
+            while (!input.ready()) ;
 
             String firstLine = input.readLine();
             String[] parts = firstLine.split(" ");
-            System.out.println("1!!!!!!!!!!!!!! " + firstLine);
             while (input.ready()) {
-                System.out.println("!"  + input.readLine());
+                System.out.println(input.readLine());
             }
 
             Path path = Paths.get(WWW, parts[1]);
-            System.out.println(path);
             if (!Files.exists(path)) {
                 output.println("HTTP/1.1 404 NOT_FOUND");
                 output.println("Content-Type: text/html; charset=utf-8");
@@ -60,10 +39,14 @@ public class HttpServer {
             output.println("Content-Type: text/html; charset=utf-8");
             output.println();
 
-            Files.newBufferedReader(path).transferTo(output);
+            try {
+                Files.newBufferedReader(path).transferTo(output);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             System.out.println("Client disconnected!");
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }
