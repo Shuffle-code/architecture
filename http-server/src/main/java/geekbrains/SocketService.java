@@ -15,8 +15,11 @@ public class SocketService implements Closeable {
 
     private final Socket socket;
 
-    public SocketService(Socket socket) {
+    private SocketService(Socket socket) {
         this.socket = socket;
+    }
+    public static SocketService createSocketServer(Socket socket){
+        return new SocketService(socket);
     }
 
     public List<String> readRequest() {
