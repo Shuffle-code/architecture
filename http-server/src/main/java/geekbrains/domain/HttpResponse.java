@@ -14,6 +14,8 @@ public class HttpResponse {
     private String protocol;
     private String type;
 
+    // изменить на заголовок и тело body и Header
+
 //    HttpResponse responseNotFound = new HttpResponseBuilder()
 //                .protocol("HTTP/1.1")
 //                .statusCode(404)

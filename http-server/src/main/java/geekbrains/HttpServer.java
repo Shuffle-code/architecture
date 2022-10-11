@@ -4,6 +4,7 @@ import geekbrains.config.Config;
 import geekbrains.config.ConfigFactory;
 import geekbrains.logger.ConsoleLogger;
 import geekbrains.logger.Logger;
+import geekbrains.service.SocketServiceFactory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -23,7 +24,7 @@ public class HttpServer {
                 Socket socket = serverSocket.accept();
                 logger.info("New client connected!");
 
-                new Thread(RequestHandler.createRequestHandler(SocketService.createSocketServer(socket), config)).start();
+                new Thread(RequestHandler.createRequestHandler(SocketServiceFactory.createSocketService(socket), config)).start();
             }
         } catch (IOException e) {
             e.printStackTrace();

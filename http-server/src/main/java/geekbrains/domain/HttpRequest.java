@@ -6,6 +6,7 @@ import java.util.Map;
 @Getter
 @Setter
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class HttpRequest {
 
     private String method;
@@ -15,30 +16,34 @@ public class HttpRequest {
     private Map<String, String> headers;
 
     private String body;
-    public static class Builder {
-        private final HttpRequest httpRequest;
 
-        public Builder() {
-            this.httpRequest = new HttpRequest();
-        }
+//    public HttpRequest(String method, String path, Map<String, String> headers, String body) {
+//    }
+
+    public static class Builder {
+        private String method;
+        private String url;
+        private Map<String, String> headers;
+        private String body;
+        
         public Builder withMethod(String method){
-            this.httpRequest.method = method;
+            this.method = method;
             return this;
         }
-        public Builder withPath(String path){
-            this.httpRequest.method = path;
+        public Builder withUrl(String url){
+            this.url = url;
             return this;
         }
-        public Builder withHeaders(String headers){
-            this.httpRequest.method = headers;
+        public Builder withHeaders(String headers, String value){
+            this.headers.put(headers, value);
             return this;
         }
         public Builder withBody(String body){
-            this.httpRequest.method = body;
+            this.body = body;
             return this;
         }
         public HttpRequest build(){
-            return this.httpRequest;
+            return new HttpRequest(method, url, headers, body);
         }
     }
 

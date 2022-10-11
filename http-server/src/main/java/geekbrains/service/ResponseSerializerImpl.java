@@ -1,4 +1,4 @@
-package geekbrains;
+package geekbrains.service;
 
 import geekbrains.domain.HttpResponse;
 

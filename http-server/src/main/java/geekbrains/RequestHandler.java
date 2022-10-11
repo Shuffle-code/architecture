@@ -2,9 +2,10 @@ package geekbrains;
 
 import geekbrains.config.Config;
 import geekbrains.domain.HttpResponse;
-import geekbrains.domain.Status;
 import geekbrains.logger.ConsoleLogger;
 import geekbrains.logger.Logger;
+import geekbrains.service.*;
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Files;
@@ -16,6 +17,7 @@ public class RequestHandler implements Runnable {
     private static final Logger logger = new ConsoleLogger();
     private static final RequestParser requestParse = new RequestParserImpl();
     private static final ResponseSerializer responseSerializer = new ResponseSerializerImpl();
+//    private final SocketService socketService;
     private final SocketService socketService;
     private final Config config;
 
@@ -24,7 +26,7 @@ public class RequestHandler implements Runnable {
         this.config = config;
     }
     public static RequestHandler createRequestHandler(SocketService socketService, Config config){
-        return new RequestHandler(socketService,config);
+        return new RequestHandler(socketService, config);
     }
     HttpResponse response = new HttpResponse();
 
