@@ -2,6 +2,7 @@ package geekbrains;
 
 import geekbrains.config.Config;
 import geekbrains.config.ConfigFactory;
+import geekbrains.handler.RequestHandler;
 import geekbrains.logger.ConsoleLogger;
 import geekbrains.logger.Logger;
 import geekbrains.service.SocketServiceFactory;

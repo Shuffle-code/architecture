@@ -51,6 +51,15 @@ public class SocketServiceImpl implements SocketService {
             throw new IllegalStateException(ex);
         }
     }
+    public void writeResponse(String rawResponse) {
+        try {
+            PrintWriter output = new PrintWriter(socket.getOutputStream());
+            output.print(rawResponse);
+            output.flush();
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
 
 
     @Override

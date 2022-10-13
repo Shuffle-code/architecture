@@ -10,7 +10,8 @@ public class ResponseSerializerImpl implements ResponseSerializer {
         String statusCode = String.valueOf(httpResponse.getStatusCode());
         String status = httpResponse.getStatus();
         String type = httpResponse.getType();
-        String httpResponseString = protocol + " " + statusCode + " " + status + "\n" + type + "\n"  + "\n";
+        String body = httpResponse.getBody();
+        String httpResponseString = protocol + " " + statusCode + " " + status + "\n" + type + "\n"  + "\n" + body;
         return httpResponseString;
     }
 }

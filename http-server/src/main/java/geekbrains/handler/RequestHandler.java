@@ -1,7 +1,8 @@
-package geekbrains;
+package geekbrains.handler;
 
 import geekbrains.config.Config;
 import geekbrains.domain.HttpResponse;
+import geekbrains.domain.Status;
 import geekbrains.logger.ConsoleLogger;
 import geekbrains.logger.Logger;
 import geekbrains.service.*;
@@ -20,15 +21,16 @@ public class RequestHandler implements Runnable {
 //    private final SocketService socketService;
     private final SocketService socketService;
     private final Config config;
+    private static HttpResponse response = new HttpResponse();
 
-    private RequestHandler(SocketService socketService, Config config) {
+    private RequestHandler(SocketService socketService, Config config, HttpResponse response) {
         this.socketService = socketService;
         this.config = config;
+        this.response = response;
     }
     public static RequestHandler createRequestHandler(SocketService socketService, Config config){
-        return new RequestHandler(socketService, config);
+        return new RequestHandler(socketService, config, response);
     }
-    HttpResponse response = new HttpResponse();
 
     @Override
     public void run() {
@@ -36,17 +38,29 @@ public class RequestHandler implements Runnable {
         String pathRequest = requestParse.parse(request).getPath();
         Path path = Paths.get(config.getWWW(), pathRequest);
         if (!Files.exists(path)) {
-            socketService.writeResponse(responseSerializer.serialize(response.responseNotFound()),
-                   new StringReader("<h1>Файл не найден!</h1>\n")
+            socketService.writeResponse(responseSerializer.serialize(response.responseNotFound())
             );
+            System.out.println(responseSerializer.serialize(response.responseNotFound()));
             return;
         }
+        StringBuilder sb = new StringBuilder();
         try {
-            socketService.writeResponse(responseSerializer.serialize(response.responseOk()),
-                    Files.newBufferedReader(path));
+            Files.readAllLines(path).forEach(sb::append);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
+
+            socketService.writeResponse(responseSerializer.serialize(response.builder()
+                            .protocol("HTTP/1.1")
+                            .statusCode(200)
+                            .status(Status.OK.getTitle())
+                            .type("Content-Type: text/html; charset=utf-8")
+                            .body(sb.toString())
+                            .build())
+                );
+
+        System.out.println(sb);
+
         logger.info("Client disconnected!");
     }
 }
