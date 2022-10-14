@@ -2,9 +2,15 @@ package geekbrains;
 
 import geekbrains.config.Config;
 import geekbrains.config.ConfigFactory;
+import geekbrains.domain.HttpResponse;
+import geekbrains.handler.MethodHandler;
+import geekbrains.handler.MethodHandlerFactory;
 import geekbrains.handler.RequestHandler;
 import geekbrains.logger.ConsoleLogger;
 import geekbrains.logger.Logger;
+import geekbrains.service.ResponseSerializer;
+import geekbrains.service.ResponseSerializerImpl;
+import geekbrains.service.SocketService;
 import geekbrains.service.SocketServiceFactory;
 
 import java.io.IOException;
@@ -24,8 +30,13 @@ public class HttpServer {
             while (true) {
                 Socket socket = serverSocket.accept();
                 logger.info("New client connected!");
+                SocketService socketService = SocketServiceFactory.createSocketService(socket);
+                ResponseSerializer responseSerializer = new ResponseSerializerImpl();
 
-                new Thread(RequestHandler.createRequestHandler(SocketServiceFactory.createSocketService(socket), config)).start();
+                new Thread(RequestHandler.createRequestHandler(
+                        SocketServiceFactory.createSocketService(socket),
+                        config,
+                        MethodHandlerFactory.create(socketService, responseSerializer, config))).start();
             }
         } catch (IOException e) {
             e.printStackTrace();

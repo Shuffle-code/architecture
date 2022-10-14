@@ -7,6 +7,9 @@ import patterns.adapter.WillDogAdapter;
 import patterns.bridge.About;
 import patterns.bridge.Careers;
 import patterns.bridge.DarkThem;
+import patterns.chain.Bank;
+import patterns.chain.Bitcoin;
+import patterns.chain.Paypal;
 import patterns.composite.Designer;
 import patterns.composite.Developer;
 import patterns.composite.Employee;
@@ -22,7 +25,7 @@ import patterns.proxy.LabDoor;
 import patterns.proxy.SecuredDoor;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         WillDog willDog = new WillDog();
         WillDogAdapter adapter = new WillDogAdapter(willDog);
         Hunter hunter = new Hunter();
@@ -69,6 +72,17 @@ public class Main {
         door.open("12345");
         door.open("1234");
         door.close();
+
+        Bank bank = new Bank(100);
+        Bitcoin bitcoin = new Bitcoin(200);
+        Paypal paypal = new Paypal(300);
+        System.out.println(bank.balance);
+        System.out.println(bitcoin.balance);
+        bank.setNext(paypal);
+        paypal.setNext(bitcoin);
+//
+        bank.pay(220);
+
 
     }
 }

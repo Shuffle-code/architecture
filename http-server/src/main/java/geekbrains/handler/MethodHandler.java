@@ -5,11 +5,10 @@ import geekbrains.domain.HttpRequest;
 import geekbrains.domain.HttpResponse;
 import geekbrains.service.ResponseSerializer;
 import geekbrains.service.SocketService;
+import org.reflections.Reflections;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Set;
 
 public abstract class MethodHandler {
     private final MethodHandler next;
@@ -37,9 +36,22 @@ public abstract class MethodHandler {
             response = new HttpResponse().responseNotFound();
         }
         String rawResponse = responseSerializer.serialize(response);
-//        socketService.writeResponse(rawResponse);
+        socketService.writeResponse(rawResponse);
+
+        reflection();
 
     }
     protected abstract HttpResponse handleInternal(HttpRequest request);
+    public void reflection(){
+        Reflections reflections = new Reflections("geekbrains.handler");
+        Set<Class<?>> annotated =
+                reflections.getTypesAnnotatedWith(Handler.class);
+
+        for (Object s : annotated
+             ) {
+            System.out.println(s);
+        }
+        System.out.println();;
+    }
 
 }
