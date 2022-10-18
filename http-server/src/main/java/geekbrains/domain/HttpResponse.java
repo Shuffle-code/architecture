@@ -40,12 +40,13 @@ public class HttpResponse {
                 .build();
     }
 
-    public HttpResponse responseOk(){
+    public HttpResponse responseNotAllowed(){
         return HttpResponse.builder()
                 .protocol("HTTP/1.1")
-                .statusCode(200)
-                .status(Status.OK.getTitle())
+                .statusCode(500)
+                .status(Status.METHOD_NOT_ALLOWED.getTitle())
                 .type("Content-Type: text/html; charset=utf-8")
+                .body("<h1>Метод не поддерживается!</h1>\n")
                 .build();
     }
 }

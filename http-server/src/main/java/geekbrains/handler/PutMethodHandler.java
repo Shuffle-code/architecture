@@ -10,8 +10,8 @@ import geekbrains.service.SocketService;
 @Handler(order = 2)
 public class PutMethodHandler extends MethodHandler {
 
-    public PutMethodHandler(String method, MethodHandler next, SocketService socketService, ResponseSerializer responseSerializer, Config config) {
-        super(method, next, socketService, responseSerializer, config);
+    public PutMethodHandler( MethodHandler next, SocketService socketService, ResponseSerializer responseSerializer, Config config) {
+        super("PUT", next, socketService, responseSerializer, config);
     }
 
     @Override
@@ -23,6 +23,6 @@ public class PutMethodHandler extends MethodHandler {
                 .type("Content-Type: text/html; charset=utf-8")
                 .body("<h1>PUT method handled</h1>")
                 .build();
-
     }
+//    PutMethodHandler putMethodHandler = new PutMethodHandler("POST", null, socketService, responseSerializer, config);
 }

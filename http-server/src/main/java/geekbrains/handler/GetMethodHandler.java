@@ -15,8 +15,8 @@ import java.nio.file.Paths;
 @Handler(order = 0)
 public class GetMethodHandler extends MethodHandler {
 
-    public GetMethodHandler(String method, MethodHandler next, SocketService socketService, ResponseSerializer responseSerializer, Config config) {
-        super(method, next, socketService, responseSerializer, config);
+    public GetMethodHandler(MethodHandler next, SocketService socketService, ResponseSerializer responseSerializer, Config config) {
+        super("GET", next, socketService, responseSerializer, config);
     }
 
     @Override
@@ -48,4 +48,8 @@ public class GetMethodHandler extends MethodHandler {
                 .body(sb.toString())
                 .build();
     }
+
+//    GetMethodHandler getMethodHandler = new GetMethodHandler("GET", new PostMethodHandler(), socketService, responseSerializer, config);
+
+
 }

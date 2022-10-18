@@ -10,9 +10,10 @@ import geekbrains.service.SocketService;
 @Handler(order = 1)
 public class PostMethodHandler extends MethodHandler {
 
-    public PostMethodHandler(String method, MethodHandler next, SocketService socketService, ResponseSerializer responseSerializer, Config config) {
-        super(method, next, socketService, responseSerializer, config);
+    public PostMethodHandler(MethodHandler next, SocketService socketService, ResponseSerializer responseSerializer, Config config) {
+        super("POST", next, socketService, responseSerializer, config);
     }
+    private final PutMethodHandler putMethodHandler = null;
 
     @Override
     protected HttpResponse handleInternal(HttpRequest request) {
@@ -24,6 +25,7 @@ public class PostMethodHandler extends MethodHandler {
                 .body("<h1>POST method handled</h1>")
                 .build();
     }
+//    PostMethodHandler postMethodHandler = new PostMethodHandler("POST", putMethodHandler.putMethodHandler, socketService, responseSerializer, config);
 
 
 }

@@ -8,6 +8,7 @@ import geekbrains.service.SocketService;
 import org.reflections.Reflections;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.util.Set;
 
 public abstract class MethodHandler {
@@ -27,31 +28,19 @@ public abstract class MethodHandler {
     }
     public void handle(HttpRequest request) throws IOException {
         HttpResponse response;
+        System.out.println(request.getMethod());
         if (method.equals(request.getMethod())){
             response = handleInternal(request);
             }else if (next != null){
             next.handle(request);
             return;
         }else {
-            response = new HttpResponse().responseNotFound();
+            response = new HttpResponse().responseNotAllowed();
         }
         String rawResponse = responseSerializer.serialize(response);
         socketService.writeResponse(rawResponse);
 
-        reflection();
-
     }
     protected abstract HttpResponse handleInternal(HttpRequest request);
-    public void reflection(){
-        Reflections reflections = new Reflections("geekbrains.handler");
-        Set<Class<?>> annotated =
-                reflections.getTypesAnnotatedWith(Handler.class);
-
-        for (Object s : annotated
-             ) {
-            System.out.println(s);
-        }
-        System.out.println();;
-    }
 
 }
