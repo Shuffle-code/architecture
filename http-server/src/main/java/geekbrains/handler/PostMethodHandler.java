@@ -7,11 +7,11 @@ import geekbrains.domain.Status;
 import geekbrains.service.ResponseSerializer;
 import geekbrains.service.SocketService;
 
-@Handler(order = 1)
+@Handler(order = 1, method = "POST")
 public class PostMethodHandler extends MethodHandler {
 
-    public PostMethodHandler(MethodHandler next, SocketService socketService, ResponseSerializer responseSerializer, Config config) {
-        super("POST", next, socketService, responseSerializer, config);
+    public PostMethodHandler(String method, MethodHandler next, SocketService socketService, ResponseSerializer responseSerializer, Config config) {
+        super(method, next, socketService, responseSerializer, config);
     }
     private final PutMethodHandler putMethodHandler = null;
 
@@ -25,7 +25,4 @@ public class PostMethodHandler extends MethodHandler {
                 .body("<h1>POST method handled</h1>")
                 .build();
     }
-//    PostMethodHandler postMethodHandler = new PostMethodHandler("POST", putMethodHandler.putMethodHandler, socketService, responseSerializer, config);
-
-
 }

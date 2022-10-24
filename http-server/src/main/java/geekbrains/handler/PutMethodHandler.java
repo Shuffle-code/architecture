@@ -7,13 +7,13 @@ import geekbrains.domain.Status;
 import geekbrains.service.ResponseSerializer;
 import geekbrains.service.SocketService;
 
-@Handler(order = 2)
+@Handler(order = 2, method = "PUT")
+
 public class PutMethodHandler extends MethodHandler {
 
-    public PutMethodHandler( MethodHandler next, SocketService socketService, ResponseSerializer responseSerializer, Config config) {
-        super("PUT", next, socketService, responseSerializer, config);
+    public PutMethodHandler( String method, MethodHandler next, SocketService socketService, ResponseSerializer responseSerializer, Config config) {
+        super(method, next, socketService, responseSerializer, config);
     }
-
     @Override
     protected HttpResponse handleInternal(HttpRequest request) {
         return HttpResponse.builder()

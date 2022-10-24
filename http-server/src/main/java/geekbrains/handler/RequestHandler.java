@@ -36,7 +36,6 @@ public class RequestHandler implements Runnable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
         try {
             socketService.close();
         } catch (IOException e) {

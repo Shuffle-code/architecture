@@ -8,42 +8,40 @@ import org.reflections.Reflections;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 
 public class MethodHandlerFactory {
+    private static final String HANDLERS_PACKAGE = "geekbrains.handler";
 
-    static Reflections reflections = new Reflections("geekbrains.handler");
+    static Reflections reflections = new Reflections(HANDLERS_PACKAGE);
 
-    public static MethodHandler create(SocketService socketService, ResponseSerializer responseSerializer, Config config) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        HashMap<Integer, Class> map = createMap();
-        Class[] param = {MethodHandler.class, SocketService.class, ResponseSerializer.class, Config.class};
-        int order = getMaxOrder();
-        Class clazz = map.get(order);
-        PutMethodHandler putMethodHandler = (PutMethodHandler)clazz.getConstructor(param).newInstance(null,  socketService, responseSerializer, config);
-        order = order - 1;
-        Class cl = map.get(order);
-        PostMethodHandler postMethodHandler = (PostMethodHandler)cl.getConstructor(param).newInstance(putMethodHandler, socketService, responseSerializer, config);
-        return new GetMethodHandler(postMethodHandler, socketService, responseSerializer, config);
+    public static MethodHandler create(SocketService socketService,
+                                       ResponseSerializer responseSerializer,
+                                       Config config) throws NoSuchMethodException,
+            InvocationTargetException,
+            InstantiationException,
+            IllegalAccessException {
+        List<MethodHandler> methodHandlerList = createList(socketService, responseSerializer, config);
+       MethodHandler methodHandler = null;
+        for (int i = methodHandlerList.size()-1; i >= 0 ; i--) {
+            methodHandler = methodHandlerList.get(i);
+            System.out.println(methodHandler + " _ " + i);
+        }
+        return methodHandler;
     }
-
-
-
-
-
-
-    static Set<Class<?>> getSetClassWithAnnotated() {
-        return  reflections.getTypesAnnotatedWith(Handler.class);
+    static List<Class<?>> getSetClassWithAnnotated() {
+        return new ArrayList<>(reflections.getTypesAnnotatedWith(Handler.class));
     }
-
-    static HashMap<Integer, Class> createMap(){
-        Set<Class<?>> setClassWithAnnotated = getSetClassWithAnnotated();
-        HashMap<Integer, Class> methodsHandlerMap = new HashMap<>();
-        for (Class<?> c : setClassWithAnnotated) {
-            Handler annotation = c.getAnnotation(Handler.class);
-            int order = annotation.order();
-            methodsHandlerMap.put(order, c);
-        }return methodsHandlerMap;
+    static List<MethodHandler> createList(SocketService socketService, ResponseSerializer responseSerializer, Config config) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        List<Class<?>> setClassWithAnnotated = getSetClassWithAnnotated();
+        setClassWithAnnotated.sort(Comparator.comparingInt(MethodHandlerFactory::getOrder));
+        List<MethodHandler> methodsHandlerList = new ArrayList<>();
+        MethodHandler prev = null;
+        for (Class<?> clazz : setClassWithAnnotated) {
+            Constructor<?> constructor = clazz.getConstructor(String.class, MethodHandler.class, SocketService.class, ResponseSerializer.class, Config.class);
+            prev = (MethodHandler) constructor.newInstance(getMethod(clazz), prev, socketService, responseSerializer, config);
+            methodsHandlerList.add(prev);
+        }return methodsHandlerList;
     }
 
     static int getMaxOrder(){
@@ -56,5 +54,29 @@ public class MethodHandlerFactory {
         }
         return maxOrder;
     }
+    public static MethodHandler createWhitLesson(SocketService socketService, ResponseSerializer responseSerializer, Config config) {
+//        Reflections reflections = new Reflections(HANDLERS_PACKAGE);
+        List<Class<?>> classes = new ArrayList<>(reflections.getTypesAnnotatedWith(Handler.class));
 
+        MethodHandler prev = null;
+        classes.sort(Comparator.comparingInt(MethodHandlerFactory::getOrder).reversed());
+        try {
+            for (Class<?> clazz : classes) {
+                Constructor<?> constructor = clazz.getConstructor(MethodHandler.class, SocketService.class, ResponseSerializer.class, Config.class);
+                prev = (MethodHandler) constructor.newInstance(prev, socketService, responseSerializer, config);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return prev;
+    }
+
+    private static int getOrder(Class<?> clazz) {
+        return clazz.getAnnotation(Handler.class).order();
+    }
+    private static String getMethod(Class<?> clazz) {
+        return clazz.getAnnotation(Handler.class).method();
+    }
 }
+
+
