@@ -6,12 +6,16 @@ import java.util.concurrent.locks.ReentrantLock;
 public class Thread {
         public static void main(String[] args) {
             PingPong pingPong = new PingPong();
-            java.lang.Thread thread1 = new java.lang.Thread(pingPong::printPing);
+            java.lang.Thread thread1 = new java.lang.Thread(() -> pingPong.printPing());
             java.lang.Thread thread2 = new java.lang.Thread(pingPong::printPong);
             thread1.start();
             thread2.start();
         }
-        public class Count {
+
+    private static void pingPong() {
+    }
+
+    public class Count {
             ReentrantLock lock = new ReentrantLock();
             int count = 0;
 
